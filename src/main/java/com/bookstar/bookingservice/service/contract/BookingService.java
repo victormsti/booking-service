@@ -3,7 +3,14 @@ package com.bookstar.bookingservice.service.contract;
 import com.bookstar.bookingservice.dto.request.CreateBookingRequest;
 import com.bookstar.bookingservice.dto.response.BookingResponse;
 
+import java.time.LocalDate;
+
 public interface BookingService {
 
     BookingResponse createBooking(CreateBookingRequest request);
+    BookingResponse cancelBooking(Long id);
+    BookingResponse getBooking(Long id, LocalDate checkInDate, LocalDate checkOutDate);
+
+
+
 }
