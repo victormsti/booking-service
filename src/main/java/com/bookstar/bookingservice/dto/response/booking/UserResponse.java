@@ -1,4 +1,4 @@
-package com.bookstar.bookingservice.dto.response;
+package com.bookstar.bookingservice.dto.response.booking;
 
 import lombok.Builder;
 import lombok.Setter;

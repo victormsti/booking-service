@@ -1,6 +1,6 @@
 package com.bookstar.bookingservice.mapper.contract;
 
-import com.bookstar.bookingservice.dto.response.RoomResponse;
+import com.bookstar.bookingservice.dto.response.booking.RoomResponse;
 import com.bookstar.bookingservice.model.Room;
 
 import java.util.List;

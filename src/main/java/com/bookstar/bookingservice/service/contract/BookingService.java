@@ -1,7 +1,7 @@
 package com.bookstar.bookingservice.service.contract;
 
-import com.bookstar.bookingservice.dto.request.CreateBookingRequest;
-import com.bookstar.bookingservice.dto.response.BookingResponse;
+import com.bookstar.bookingservice.dto.request.booking.CreateBookingRequest;
+import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 
 import java.time.LocalDate;
 

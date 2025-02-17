@@ -1,6 +1,6 @@
 package com.bookstar.bookingservice.mapper.impl;
 
-import com.bookstar.bookingservice.dto.response.BookingResponse;
+import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 import com.bookstar.bookingservice.mapper.contract.BookingMapper;
 import com.bookstar.bookingservice.mapper.contract.RoomMapper;
 import com.bookstar.bookingservice.mapper.contract.UserMapper;

@@ -1,4 +1,4 @@
-package com.bookstar.bookingservice.dto.request;
+package com.bookstar.bookingservice.dto.request.booking;
 
 import lombok.Getter;
 

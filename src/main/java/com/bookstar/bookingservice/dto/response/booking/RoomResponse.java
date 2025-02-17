@@ -1,4 +1,4 @@
-package com.bookstar.bookingservice.dto.response;
+package com.bookstar.bookingservice.dto.response.booking;
 
 import com.bookstar.bookingservice.enums.RoomType;
 import lombok.Builder;

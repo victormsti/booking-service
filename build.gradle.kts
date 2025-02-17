@@ -23,9 +23,14 @@ repositories {
 	mavenCentral()
 }
 
+val jjwtVersion: String by extra("0.12.6")
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation ("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation ("org.springframework.boot:spring-boot-starter-security")
+	implementation ("org.springframework.boot:spring-boot-starter-validation")
+	implementation ("io.jsonwebtoken:jjwt-api:$jjwtVersion")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.postgresql:postgresql")
