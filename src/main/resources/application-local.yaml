@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    url: jdbc:h2:mem:testdb;
+    platform: h2
+    password: ''
+  h2:
+    console:
+      enabled: 'true'
+      path: /h2-console
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+
+jwt:
+  subject: "bookstar"
+  jwt_secret: "eyJhbGciOiJIUzUxMiJ9eyJzdWIiOiJyb290MiIsImlhdCI6MTYyMzA5ODkzNiwiZXhwIjoxNjIzMTE2OTM2fQUlFvXP9d3KD5UvSxaswq1Km52UCTbBML2BPx6D0qgO43aaUGPKakBFZkYNxHSM1OU8uO7W9Ry07EiWyd4E1g"
