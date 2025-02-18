@@ -54,7 +54,6 @@ public class BookingBlockServiceImpl implements BookingBlockService {
     @Override
     @Transactional
     public BookingResponse updateBookingBlock(Long bookingId, BookingBlockRequest request) {
-        //TODO update like bookingService
         validateBookingDates(request);
 
         Room room = getRoom(request.getRoomId());
