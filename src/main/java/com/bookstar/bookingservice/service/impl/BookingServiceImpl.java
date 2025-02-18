@@ -88,7 +88,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public void deleteBooking(Long id) {
-        Booking booking = getBooking(id);
+        Booking booking = getBookingFromPropertyOwner(id);
         validateOwnershipForDeletion(booking);
 
         if(booking.getStatus().equals(BookingStatus.CONFIRMED)){
@@ -199,6 +199,11 @@ public class BookingServiceImpl implements BookingService {
 
     private Booking getBooking(Long id){
         return bookingRepository.findByIdAndUserId(id, UserContext.getInstance().getUser().getId())
+                .orElseThrow(() -> new NotFoundException("Booking not found"));
+    }
+
+    private Booking getBookingFromPropertyOwner(Long id){
+        return bookingRepository.findByIdAndRoomPropertyUserId(id, UserContext.getInstance().getUser().getId())
                 .orElseThrow(() -> new NotFoundException("Booking not found"));
     }
 
