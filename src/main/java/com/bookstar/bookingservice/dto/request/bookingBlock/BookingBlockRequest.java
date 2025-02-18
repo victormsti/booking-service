@@ -1,4 +1,4 @@
-package com.bookstar.bookingservice.dto.request.block;
+package com.bookstar.bookingservice.dto.request.bookingBlock;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 
 @Getter
-public class BlockRequest {
+public class BookingBlockRequest {
 
     @NotNull
     private Long roomId;

@@ -5,7 +5,7 @@ import com.bookstar.bookingservice.configuration.exception.BadRequestException;
 import com.bookstar.bookingservice.configuration.exception.ConflictException;
 import com.bookstar.bookingservice.configuration.exception.NotFoundException;
 import com.bookstar.bookingservice.configuration.exception.UnauthorizedException;
-import com.bookstar.bookingservice.dto.request.block.BlockRequest;
+import com.bookstar.bookingservice.dto.request.bookingBlock.BookingBlockRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 import com.bookstar.bookingservice.enums.BookingStatus;
 import com.bookstar.bookingservice.enums.BookingType;
@@ -39,7 +39,7 @@ public class BookingBlockServiceImpl implements BookingBlockService {
 
     @Override
     @Transactional
-    public BookingResponse createBookingBlock(BlockRequest request) {
+    public BookingResponse createBookingBlock(BookingBlockRequest request) {
         validateBookingDates(request);
 
         Room room = getRoom(request.getRoomId());
@@ -53,7 +53,7 @@ public class BookingBlockServiceImpl implements BookingBlockService {
 
     @Override
     @Transactional
-    public BookingResponse updateBookingBlock(Long bookingId, BlockRequest request) {
+    public BookingResponse updateBookingBlock(Long bookingId, BookingBlockRequest request) {
         validateBookingDates(request);
 
         Room room = getRoom(request.getRoomId());
@@ -65,26 +65,13 @@ public class BookingBlockServiceImpl implements BookingBlockService {
         return bookingMapper.toResponse(updatedBooking);
     }
 
-    @Override
-    public void deleteBookingBlock(Long id) {
-        Booking booking = getBookingFromPropertyOwner(id);
-
-        validateOwnership(booking.getRoom());
-
-        if (booking.getStatus().equals(BookingStatus.CONFIRMED)) {
-            throw new BadRequestException("Cannot delete an active block");
-        }
-
-        bookingRepository.delete(booking);
-    }
-
-    private void validateBookingDates(BlockRequest request) {
+    private void validateBookingDates(BookingBlockRequest request) {
         if (request.getCheckOutDate().isBefore(request.getCheckInDate())) {
             throw new BadRequestException("Check-in date must be before check-out date");
         }
     }
 
-    private void checkRoomAvailabilityForNewBookingBlock(BlockRequest request) {
+    private void checkRoomAvailabilityForNewBookingBlock(BookingBlockRequest request) {
         Optional<List<Booking>> existingBookings = bookingRepository.findActiveBookingsForDates(
                 request.getRoomId(),
                 request.getCheckInDate(),
@@ -115,7 +102,7 @@ public class BookingBlockServiceImpl implements BookingBlockService {
         );
     }
 
-    private Booking saveBookingBlock(BlockRequest request, Room room) {
+    private Booking saveBookingBlock(BookingBlockRequest request, Room room) {
         Booking booking = Booking.builder()
                 .type(BookingType.BLOCK)
                 .user(UserContext.getInstance().getUser())
@@ -132,10 +119,5 @@ public class BookingBlockServiceImpl implements BookingBlockService {
         if (!room.getProperty().getUser().getId().equals(UserContext.getInstance().getUser().getId())) {
             throw new UnauthorizedException("You do not have permission to manage booking blocks for this property");
         }
-    }
-
-    private Booking getBookingFromPropertyOwner(Long id) {
-        return bookingRepository.findByIdAndRoomPropertyUserId(id, UserContext.getInstance().getUser().getId())
-                .orElseThrow(() -> new NotFoundException("Booking not found"));
     }
 }
