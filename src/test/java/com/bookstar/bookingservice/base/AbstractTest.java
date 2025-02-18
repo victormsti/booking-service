@@ -1,0 +1,33 @@
+package com.bookstar.bookingservice.base;
+
+import com.bookstar.bookingservice.builder.AuthRequestBuilder;
+import com.bookstar.bookingservice.builder.BookingBuilder;
+import com.bookstar.bookingservice.builder.UserBuilder;
+import com.bookstar.bookingservice.builder.UserDetailsBuilder;
+import com.bookstar.bookingservice.dto.request.token.AuthRequest;
+import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
+import com.bookstar.bookingservice.model.Booking;
+import com.bookstar.bookingservice.model.User;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+@ActiveProfiles("test")
+@ExtendWith(SpringExtension.class)
+@AutoConfigureMockMvc
+public class AbstractTest {
+
+    protected final String expectedUsername = "bestuser";
+    protected final String expectedPassword = "bestpassword";
+    protected final String expectedValidToken = "validToken";
+
+
+    protected final UserDetails expectedUserDetails = UserDetailsBuilder.buildUserDetails();
+    protected final AuthRequest validAuthRequest = AuthRequestBuilder.buildValidAuthRequest();
+    protected final BookingResponse expectedBookingResponse = BookingBuilder.buildBookingResponse();
+    protected final Booking expectedBooking = BookingBuilder.buildBooking();
+    protected final User guestUser = UserBuilder.buildGuestUser();
+
+}
