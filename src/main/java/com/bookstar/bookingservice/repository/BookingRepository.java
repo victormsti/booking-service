@@ -14,13 +14,13 @@ import java.util.Optional;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT b FROM Booking b WHERE b.room.id = :roomId " +
-            "AND b.status = 'CONFIRMED' " +
+            "AND (b.status = 'CONFIRMED' OR b.status = 'BLOCKED') " +
             "AND (b.checkInDate < :checkOutDate " +
             "AND b.checkOutDate > :checkInDate)")
     Optional<List<Booking>> findActiveBookingsForDates(Long roomId, LocalDate checkInDate, LocalDate checkOutDate);
 
     @Query("SELECT b FROM Booking b WHERE b.room.id = :roomId " +
-            "AND b.status = 'CONFIRMED' " +
+            "AND (b.status = 'CONFIRMED' OR b.status = 'BLOCKED') " +
             "AND (b.checkInDate < :checkOutDate " +
             "AND b.checkOutDate > :checkInDate) " +
             "AND b.id != :updatedBookingId")

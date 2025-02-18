@@ -28,13 +28,13 @@ CREATE TABLE bookings (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     room_id INT NOT NULL,
-    status VARCHAR(10) NOT NULL CHECK (status IN ('CONFIRMED', 'CANCELLED', 'PENDING')),
-    type VARCHAR(15) NOT NULL CHECK (type IN ('GUEST', 'ADMIN_BLOCKED')),
-    quantity_of_people INT NOT NULL,
+    status VARCHAR(10) NOT NULL CHECK (status IN ('CONFIRMED', 'CANCELLED', 'PENDING', 'BLOCKED')),
+    type VARCHAR(15) NOT NULL CHECK (type IN ('GUEST', 'BLOCK')),
+    quantity_of_people INT,
     check_in_date DATE NOT NULL,
     check_out_date DATE NOT NULL,
-    final_price DECIMAL(10,2) NOT NULL,
-    payment_status VARCHAR(10) NOT NULL CHECK (payment_status IN ('PENDING', 'PAID', 'REFUNDED')),
+    final_price DECIMAL(10,2),
+    payment_status VARCHAR(10) CHECK (payment_status IN ('PENDING', 'PAID', 'REFUNDED')),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE
 );

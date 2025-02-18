@@ -198,8 +198,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private Booking getBooking(Long id){
-        return bookingRepository.findByIdAndUserId(id, UserContext.getInstance().getUser().getId())
-                .orElseThrow(() -> new NotFoundException("Booking not found"));
+        Booking booking = bookingRepository.findById(id).orElseThrow(() -> new NotFoundException("Booking not found"));
+
+        if (isPropertyOwner(booking) || isBookingUser(booking)) {
+            return booking;
+        }
+        throw new NotFoundException("Booking not found");
     }
 
     private Booking getBookingFromPropertyOwner(Long id){
@@ -211,5 +215,15 @@ public class BookingServiceImpl implements BookingService {
         if (!booking.getRoom().getProperty().getUser().getId().equals(UserContext.getInstance().getUser().getId())) {
             throw new UnauthorizedException("You do not have permission to delete this booking");
         }
+    }
+
+    private Boolean isPropertyOwner(Booking booking){
+        Long loggedUserId = UserContext.getInstance().getUser().getId();
+        return booking.getRoom().getProperty().getUser().getId().equals(loggedUserId);
+    }
+
+    private Boolean isBookingUser(Booking booking){
+        Long loggedUserId = UserContext.getInstance().getUser().getId();
+        return booking.getUser().getId().equals(loggedUserId);
     }
 }
