@@ -15,7 +15,6 @@ public interface BookingService {
     void cancelBooking(Long id);
     BookingResponse getBookingById(Long id);
 
-    // TODO change to pageable
     List<BookingResponse> getAllBookings();
 
 }

@@ -1,6 +1,11 @@
 package com.bookstar.bookingservice.mapper.impl;
 
+import com.bookstar.bookingservice.configuration.context.UserContext;
+import com.bookstar.bookingservice.dto.request.booking.BookingRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
+import com.bookstar.bookingservice.enums.BookingStatus;
+import com.bookstar.bookingservice.enums.BookingType;
+import com.bookstar.bookingservice.enums.PaymentStatus;
 import com.bookstar.bookingservice.mapper.contract.BookingMapper;
 import com.bookstar.bookingservice.mapper.contract.GuestMapper;
 import com.bookstar.bookingservice.mapper.contract.RoomMapper;
@@ -41,6 +46,18 @@ public class BookingMapperImpl implements BookingMapper {
                 .room(roomMapper.toResponse(booking.getRoom()))
                 .guests(guestMapper.toResponse(booking.getGuests()))
                 .build();
+    }
+
+    @Override
+    public Booking toUpdate(Booking booking, BookingRequest request) {
+        booking.setUser(UserContext.getInstance().getUser());
+        booking.setCheckInDate(!booking.getCheckInDate().equals(request.getCheckInDate()) ? request.getCheckInDate() : booking.getCheckInDate());
+        booking.setCheckOutDate(!booking.getCheckOutDate().equals(request.getCheckOutDate()) ? request.getCheckOutDate() : booking.getCheckOutDate());
+        booking.setQuantityOfPeople(!booking.getQuantityOfPeople().equals(request.getQuantityOfPeople()) ? request.getQuantityOfPeople() : booking.getQuantityOfPeople());
+        booking.setStatus(BookingStatus.CONFIRMED);
+        booking.setPaymentStatus(PaymentStatus.PAID);
+        booking.setType(BookingType.GUEST);
+        return booking;
     }
 
     @Override

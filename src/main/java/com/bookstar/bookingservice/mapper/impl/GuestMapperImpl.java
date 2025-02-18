@@ -26,6 +26,10 @@ public class GuestMapperImpl implements GuestMapper {
     public List<GuestResponse> toResponse(List<Guest> guests) {
         List<GuestResponse> responseList = new ArrayList<>();
 
+        if(guests == null){
+            return responseList;
+        }
+
         guests.forEach(guest -> {
             responseList.add(toResponse(guest));
         });

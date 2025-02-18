@@ -59,6 +59,7 @@ public class BookingController {
     }
 
     //TODO change it to pageable
+    //TODO add logic to property owner
     @GetMapping
     public ResponseEntity<List<BookingResponse>> getAllBookings(){
         return ResponseEntity.ok(bookingService.getAllBookings());

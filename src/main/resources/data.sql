@@ -49,7 +49,6 @@ CREATE TABLE guests (
     FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE
 );
 
--- TODO create a m:n table for property_admins
 -- password: 123456
 INSERT INTO users (username, password, type, email)
 VALUES ('test_user', '$2a$12$OJybB6PGaqCA7N210TMOY.wMNoQovhtWKNvQ34GP1VWcqaaY7MLA6', 'CLIENT', 'user@example.com');

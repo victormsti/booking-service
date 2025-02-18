@@ -20,6 +20,7 @@ import com.bookstar.bookingservice.repository.RoomRepository;
 import com.bookstar.bookingservice.service.contract.BookingService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -70,11 +71,11 @@ public class BookingServiceImpl implements BookingService {
         Room room = getRoom(request.getRoomId());
         validateRoomCapacity(room, request.getQuantityOfPeople());
         BigDecimal finalPrice = calculateFinalPrice(request, room);
-        Booking savedBooking = saveBooking(request, room, finalPrice);
-        List<Guest> guests = saveGuests(request, savedBooking);
-        savedBooking.setGuests(guests);
-
-        return bookingMapper.toResponse(savedBooking);
+        Booking updatedBooking = updateBooking(getBooking(bookingId), request, room, finalPrice);
+        List<Guest> guests = saveGuests(request, updatedBooking);
+        updatedBooking.getGuests().clear();
+        updatedBooking.getGuests().addAll(guests);
+        return bookingMapper.toResponse(bookingRepository.save(updatedBooking));
     }
 
     @Override
@@ -182,7 +183,18 @@ public class BookingServiceImpl implements BookingService {
                 .build());
     }
 
+    private Booking updateBooking(Booking booking, BookingRequest request, Room room, BigDecimal finalPrice) {
+        booking = bookingMapper.toUpdate(booking, request);
+        booking.setRoom(room);
+        booking.setFinalPrice(finalPrice);
+        return bookingRepository.save(booking);
+    }
+
     private List<Guest> saveGuests(BookingRequest request, Booking savedBooking) {
+        if(!CollectionUtils.isEmpty(savedBooking.getGuests())){
+            guestRepository.deleteAll(savedBooking.getGuests());
+        }
+
         List<Guest> guests = request.getGuests().stream()
                 .map(guest -> Guest.builder()
                         .firstName(guest.getFirstName())
