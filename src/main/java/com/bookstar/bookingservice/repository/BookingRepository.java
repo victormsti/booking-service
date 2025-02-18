@@ -1,5 +1,6 @@
 package com.bookstar.bookingservice.repository;
 
+import com.bookstar.bookingservice.enums.BookingStatus;
 import com.bookstar.bookingservice.model.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "AND (b.checkInDate < :checkOutDate " +
             "AND b.checkOutDate > :checkInDate)")
     Optional<List<Booking>> findActiveBookingsForDates(Long roomId, LocalDate checkInDate, LocalDate checkOutDate);
+
+    Optional<Booking> findByIdAndUserId(Long id, Long userId);
+
+    Optional<Booking> findByIdAndUserIdAndStatus(Long id, Long userId, BookingStatus bookingStatus);
+
+    Optional<List<Booking>> findAllByUserId(Long userId);
+
 }

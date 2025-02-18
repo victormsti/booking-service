@@ -2,6 +2,7 @@ package com.bookstar.bookingservice.mapper.impl;
 
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 import com.bookstar.bookingservice.mapper.contract.BookingMapper;
+import com.bookstar.bookingservice.mapper.contract.GuestMapper;
 import com.bookstar.bookingservice.mapper.contract.RoomMapper;
 import com.bookstar.bookingservice.mapper.contract.UserMapper;
 import com.bookstar.bookingservice.model.Booking;
@@ -15,10 +16,14 @@ public class BookingMapperImpl implements BookingMapper {
 
     private final UserMapper userMapper;
     private final RoomMapper roomMapper;
+    private final GuestMapper guestMapper;
 
-    public BookingMapperImpl(UserMapper userMapper, RoomMapper roomMapper) {
+    public BookingMapperImpl(UserMapper userMapper,
+                             RoomMapper roomMapper,
+                             GuestMapper guestMapper) {
         this.userMapper = userMapper;
         this.roomMapper = roomMapper;
+        this.guestMapper = guestMapper;
     }
 
     @Override
@@ -34,6 +39,7 @@ public class BookingMapperImpl implements BookingMapper {
                 .quantityOfPeople(booking.getQuantityOfPeople())
                 .user(userMapper.toResponse(booking.getUser()))
                 .room(roomMapper.toResponse(booking.getRoom()))
+                .guests(guestMapper.toResponse(booking.getGuests()))
                 .build();
     }
 

@@ -1,7 +1,11 @@
 package com.bookstar.bookingservice.configuration.exception.handler;
 
+import com.bookstar.bookingservice.configuration.exception.BadRequestException;
+import com.bookstar.bookingservice.configuration.exception.ConflictException;
 import com.bookstar.bookingservice.configuration.exception.NotFoundException;
 import com.bookstar.bookingservice.configuration.exception.RestException;
+import com.bookstar.bookingservice.configuration.exception.UnauthorizedException;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,13 +39,64 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, restException.getStatus());
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorMessageResponse> handleRuntimeException(RuntimeException ex) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponse(
+                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        ex.getMessage() != null ? ex.getMessage() : "An unexpected error occurred"
+                ),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorMessageResponse> handleBadCredentialsException(NotFoundException ex) {
+    public ResponseEntity<ErrorMessageResponse> handleNotFoundException(NotFoundException ex) {
         return new ResponseEntity<>(
                 new ErrorMessageResponse(
                         ex.getStatus().value(),
                         ex.getMessage()
                 ),ex.getStatus()
+        );
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorMessageResponse> handleConflictException(ConflictException ex) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponse(
+                        ex.getStatus().value(),
+                        ex.getMessage()
+                ),ex.getStatus()
+        );
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorMessageResponse> handleUnauthorizedException(UnauthorizedException ex) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponse(
+                        ex.getStatus().value(),
+                        ex.getMessage()
+                ),ex.getStatus()
+        );
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorMessageResponse> handleBadRequestException(BadRequestException ex) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponse(
+                        ex.getStatus().value(),
+                        ex.getMessage()
+                ),ex.getStatus()
+        );
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorMessageResponse> handleNotFoundException(ExpiredJwtException ex) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponse(
+                        HttpStatus.FORBIDDEN.value(),
+                        "The token has been expired"
+                ),HttpStatus.FORBIDDEN
         );
     }
 

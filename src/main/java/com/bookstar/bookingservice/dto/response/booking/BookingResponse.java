@@ -4,13 +4,16 @@ import com.bookstar.bookingservice.enums.BookingStatus;
 import com.bookstar.bookingservice.enums.BookingType;
 import com.bookstar.bookingservice.enums.PaymentStatus;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
-@Builder
+@Getter
 @Setter
+@Builder
 public class BookingResponse {
     private Long id;
     private UserResponse user;
@@ -24,4 +27,6 @@ public class BookingResponse {
     private LocalDate checkOutDate;
     private BigDecimal finalPrice;
     private PaymentStatus paymentStatus;
+
+    private List<GuestResponse> guests;
 }

@@ -37,6 +37,16 @@ CREATE TABLE bookings (
     FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE
 );
 
+CREATE TABLE guests (
+    id SERIAL PRIMARY KEY,
+    booking_id INT NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    birth_date DATE NOT NULL,
+    main_guest BOOLEAN NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE
+);
+
 -- TODO create a m:n table for property_admins
 -- password: 123456
 INSERT INTO users (username, password, type, email)
@@ -60,3 +70,8 @@ INSERT INTO rooms (property_id, name, type, capacity, price_per_night) VALUES
 
 INSERT INTO bookings (user_id, room_id, status, type, quantity_of_people, check_in_date, check_out_date, final_price, payment_status)
 VALUES (1, 1, 'CONFIRMED', 'GUEST', 2, '2025-04-01', '2025-04-05', 600.00, 'PAID');
+
+INSERT INTO guests (booking_id, first_name, last_name, birth_date, main_guest)
+VALUES
+    (1, 'John', 'Doe', '1990-05-15', TRUE),
+    (1, 'Jane', 'Doe', '1992-08-21', FALSE);

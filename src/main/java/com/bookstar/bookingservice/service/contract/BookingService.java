@@ -4,13 +4,14 @@ import com.bookstar.bookingservice.dto.request.booking.CreateBookingRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface BookingService {
 
     BookingResponse createBooking(CreateBookingRequest request);
-    BookingResponse cancelBooking(Long id);
-    BookingResponse getBooking(Long id, LocalDate checkInDate, LocalDate checkOutDate);
+    void cancelBooking(Long id);
+    BookingResponse getBookingById(Long id);
 
-
-
+    // TODO change to pageable
+    List<BookingResponse> getAllBookings();
 }
