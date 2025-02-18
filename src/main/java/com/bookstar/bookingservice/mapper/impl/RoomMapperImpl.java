@@ -25,6 +25,7 @@ public class RoomMapperImpl implements RoomMapper {
                 .name(room.getName())
                 .type(room.getType())
                 .capacity(room.getCapacity())
+                .pricePerNight(room.getPricePerNight())
                 .property(propertyMapper.toResponse(room.getProperty()))
                 .build();
     }
