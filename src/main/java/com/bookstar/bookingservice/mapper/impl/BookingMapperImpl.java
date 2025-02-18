@@ -2,6 +2,7 @@ package com.bookstar.bookingservice.mapper.impl;
 
 import com.bookstar.bookingservice.configuration.context.UserContext;
 import com.bookstar.bookingservice.dto.request.booking.BookingRequest;
+import com.bookstar.bookingservice.dto.request.bookingBlock.BookingBlockRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 import com.bookstar.bookingservice.enums.BookingStatus;
 import com.bookstar.bookingservice.enums.BookingType;
@@ -57,6 +58,16 @@ public class BookingMapperImpl implements BookingMapper {
         booking.setStatus(BookingStatus.CONFIRMED);
         booking.setPaymentStatus(PaymentStatus.PAID);
         booking.setType(BookingType.GUEST);
+        return booking;
+    }
+
+    @Override
+    public Booking toUpdate(Booking booking, BookingBlockRequest request) {
+        booking.setUser(UserContext.getInstance().getUser());
+        booking.setCheckInDate(!booking.getCheckInDate().equals(request.getCheckInDate()) ? request.getCheckInDate() : booking.getCheckInDate());
+        booking.setCheckOutDate(!booking.getCheckOutDate().equals(request.getCheckOutDate()) ? request.getCheckOutDate() : booking.getCheckOutDate());
+        booking.setStatus(BookingStatus.BLOCKED);
+        booking.setType(BookingType.BLOCK);
         return booking;
     }
 

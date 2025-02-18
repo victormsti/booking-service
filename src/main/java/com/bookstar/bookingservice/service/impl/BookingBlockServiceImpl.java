@@ -54,6 +54,7 @@ public class BookingBlockServiceImpl implements BookingBlockService {
     @Override
     @Transactional
     public BookingResponse updateBookingBlock(Long bookingId, BookingBlockRequest request) {
+        //TODO update like bookingService
         validateBookingDates(request);
 
         Room room = getRoom(request.getRoomId());
@@ -61,7 +62,7 @@ public class BookingBlockServiceImpl implements BookingBlockService {
 
         checkRoomAvailabilityForUpdateBookingBlock(bookingId, request.getRoomId(), request.getCheckInDate(), request.getCheckOutDate());
 
-        Booking updatedBooking = saveBookingBlock(request, room);
+        Booking updatedBooking = updateBookingBlock(bookingId, request, room);
         return bookingMapper.toResponse(updatedBooking);
     }
 
@@ -102,6 +103,12 @@ public class BookingBlockServiceImpl implements BookingBlockService {
         );
     }
 
+    private Booking getBooking(Long bookingId) {
+        return bookingRepository.findById(bookingId).orElseThrow(
+                () -> new NotFoundException("Booking not found")
+        );
+    }
+
     private Booking saveBookingBlock(BookingBlockRequest request, Room room) {
         Booking booking = Booking.builder()
                 .type(BookingType.BLOCK)
@@ -112,6 +119,13 @@ public class BookingBlockServiceImpl implements BookingBlockService {
                 .status(BookingStatus.BLOCKED)
                 .build();
 
+        return bookingRepository.save(booking);
+    }
+
+    private Booking updateBookingBlock(Long bookingId, BookingBlockRequest request, Room room) {
+        Booking booking = getBooking(bookingId);
+        booking = bookingMapper.toUpdate(booking, request);
+        booking.setRoom(room);
         return bookingRepository.save(booking);
     }
 
