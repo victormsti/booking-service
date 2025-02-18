@@ -37,6 +37,12 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.updateBooking(id, request));
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<BookingResponse> rebookCanceledBooking(@PathVariable Long id){
+        return ResponseEntity.ok(bookingService.rebookCanceledBooking(id));
+    }
+
+
     @DeleteMapping("{id}")
     public ResponseEntity<Void> cancelBooking(@PathVariable Long id){
         bookingService.cancelBooking(id);

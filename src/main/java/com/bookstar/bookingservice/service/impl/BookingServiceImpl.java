@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingResponse updateBooking(Long bookingId, BookingRequest request) {
         validateBookingDates(request);
-        checkRoomAvailabilityForUpdateBooking(bookingId, request);
+        checkRoomAvailabilityForUpdateBooking(bookingId, request.getRoomId(), request.getCheckInDate(), request.getCheckOutDate());
         Room room = getRoom(request.getRoomId());
         validateRoomCapacity(room, request.getQuantityOfPeople());
         BigDecimal finalPrice = calculateFinalPrice(request, room);
@@ -76,9 +77,17 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public BookingResponse rebookCanceledBooking(Long id) {
+        Booking booking = getBooking(id);
+        checkRoomAvailabilityForUpdateBooking(id, booking.getRoom().getId(), booking.getCheckInDate(), booking.getCheckOutDate());
+        booking.setStatus(BookingStatus.CONFIRMED);
+        booking.setPaymentStatus(PaymentStatus.PAID);
+        return bookingMapper.toResponse(bookingRepository.save(booking));
+    }
+
+    @Override
     public void cancelBooking(Long id) {
-        Booking booking = bookingRepository.findByIdAndUserIdAndStatus(id, UserContext.getInstance().getUser().getId(), BookingStatus.CONFIRMED)
-                .orElseThrow(() -> new NotFoundException("No active Booking was found"));
+        Booking booking = getBooking(id);
 
         booking.setStatus(BookingStatus.CANCELLED);
         booking.setPaymentStatus(PaymentStatus.REFUNDED);
@@ -87,10 +96,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponse getBookingById(Long id) {
-        Booking booking = bookingRepository.findByIdAndUserId(id, UserContext.getInstance().getUser().getId())
-                .orElseThrow(() -> new NotFoundException("Booking not found"));
-
-        return bookingMapper.toResponse(booking);
+        return bookingMapper.toResponse(getBooking(id));
     }
 
     @Override
@@ -119,11 +125,11 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private void checkRoomAvailabilityForUpdateBooking(Long bookingId, BookingRequest request) {
+    private void checkRoomAvailabilityForUpdateBooking(Long bookingId, Long roomId, LocalDate checkInDate, LocalDate checkOutDate) {
         Optional<List<Booking>> existingBookings = bookingRepository.findActiveBookingsForDatesExcludingCurrent(
-                request.getRoomId(),
-                request.getCheckInDate(),
-                request.getCheckOutDate(),
+                roomId,
+                checkInDate,
+                checkOutDate,
                 bookingId
         );
 
@@ -176,5 +182,10 @@ public class BookingServiceImpl implements BookingService {
 
         guestRepository.saveAll(guests);
         return guests;
+    }
+
+    private Booking getBooking(Long id){
+        return bookingRepository.findByIdAndUserId(id, UserContext.getInstance().getUser().getId())
+                .orElseThrow(() -> new NotFoundException("Booking not found"));
     }
 }

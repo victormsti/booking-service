@@ -15,4 +15,5 @@ public interface BookingService {
     // TODO change to pageable
     List<BookingResponse> getAllBookings();
 
+    BookingResponse rebookCanceledBooking(Long id);
 }
