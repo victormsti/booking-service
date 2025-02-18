@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Getter
-public class CreateBookingRequest {
+public class BookingRequest {
 
     @NotNull
     private Long roomId;

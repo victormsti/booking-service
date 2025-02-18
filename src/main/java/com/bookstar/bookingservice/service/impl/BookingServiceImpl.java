@@ -4,7 +4,7 @@ import com.bookstar.bookingservice.configuration.context.UserContext;
 import com.bookstar.bookingservice.configuration.exception.BadRequestException;
 import com.bookstar.bookingservice.configuration.exception.ConflictException;
 import com.bookstar.bookingservice.configuration.exception.NotFoundException;
-import com.bookstar.bookingservice.dto.request.booking.CreateBookingRequest;
+import com.bookstar.bookingservice.dto.request.booking.BookingRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 import com.bookstar.bookingservice.enums.BookingStatus;
 import com.bookstar.bookingservice.enums.BookingType;
@@ -46,54 +46,32 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponse createBooking(CreateBookingRequest request) {
-        Optional<List<Booking>> existingBookings = bookingRepository.findActiveBookingsForDates(
-                request.getRoomId(),
-                request.getCheckInDate(),
-                request.getCheckOutDate()
-        );
+    public BookingResponse createBooking(BookingRequest request) {
 
-        if(existingBookings.isPresent() && !existingBookings.get().isEmpty()){
-            throw new ConflictException("Room is not available for the given dates");
-        }
-
-        Room room = roomRepository.findById(request.getRoomId()).orElseThrow(
-                () -> new NotFoundException("Room was not found")
-        );
-
-        if(room.getCapacity() < request.getQuantityOfPeople()){
-            throw new BadRequestException("Room doesn't support the requested amount of people");
-        }
-
-        long nights = ChronoUnit.DAYS.between(request.getCheckInDate(), request.getCheckOutDate());
-        BigDecimal finalPrice = room.getPricePerNight().multiply(BigDecimal.valueOf(nights));
-
-        Booking savedBooking = bookingRepository.save(Booking.builder()
-                .type(BookingType.GUEST)
-                .user(UserContext.getInstance().getUser())
-                .checkInDate(request.getCheckInDate())
-                .checkOutDate(request.getCheckOutDate())
-                .room(room)
-                .paymentStatus(PaymentStatus.PAID)
-                .quantityOfPeople(request.getQuantityOfPeople())
-                .finalPrice(finalPrice)
-                .status(BookingStatus.CONFIRMED)
-                .build());
-
-
-        List<Guest> guests = request.getGuests().stream()
-                .map(guest -> Guest.builder()
-                        .firstName(guest.getFirstName())
-                        .lastName(guest.getLastName())
-                        .birthDate(guest.getBirthDate())
-                        .mainGuest(guest.getMainGuest())
-                        .booking(savedBooking)
-                        .build())
-                .toList();
-
-        guestRepository.saveAll(guests);
-
+        validateBookingDates(request);
+        checkRoomAvailabilityForNewBooking(request);
+        Room room = getRoom(request.getRoomId());
+        validateRoomCapacity(room, request.getQuantityOfPeople());
+        BigDecimal finalPrice = calculateFinalPrice(request, room);
+        Booking savedBooking = saveBooking(request, room, finalPrice);
+        List<Guest> guests = saveGuests(request, savedBooking);
         savedBooking.setGuests(guests);
+
+        return bookingMapper.toResponse(savedBooking);
+    }
+
+    @Override
+    @Transactional
+    public BookingResponse updateBooking(Long bookingId, BookingRequest request) {
+        validateBookingDates(request);
+        checkRoomAvailabilityForUpdateBooking(bookingId, request);
+        Room room = getRoom(request.getRoomId());
+        validateRoomCapacity(room, request.getQuantityOfPeople());
+        BigDecimal finalPrice = calculateFinalPrice(request, room);
+        Booking savedBooking = saveBooking(request, room, finalPrice);
+        List<Guest> guests = saveGuests(request, savedBooking);
+        savedBooking.setGuests(guests);
+
         return bookingMapper.toResponse(savedBooking);
     }
 
@@ -121,5 +99,82 @@ public class BookingServiceImpl implements BookingService {
                 .orElseGet(ArrayList::new);
 
         return bookingMapper.toResponse(bookings);
+    }
+
+    private void validateBookingDates(BookingRequest request) {
+        if (request.getCheckOutDate().isBefore(request.getCheckInDate())) {
+            throw new BadRequestException("Check-in date needs to be before check-out date");
+        }
+    }
+
+    private void checkRoomAvailabilityForNewBooking(BookingRequest request) {
+        Optional<List<Booking>> existingBookings = bookingRepository.findActiveBookingsForDates(
+                request.getRoomId(),
+                request.getCheckInDate(),
+                request.getCheckOutDate()
+        );
+
+        if (existingBookings.isPresent() && !existingBookings.get().isEmpty()) {
+            throw new ConflictException("Room is not available for the given dates");
+        }
+    }
+
+    private void checkRoomAvailabilityForUpdateBooking(Long bookingId, BookingRequest request) {
+        Optional<List<Booking>> existingBookings = bookingRepository.findActiveBookingsForDatesExcludingCurrent(
+                request.getRoomId(),
+                request.getCheckInDate(),
+                request.getCheckOutDate(),
+                bookingId
+        );
+
+        if (existingBookings.isPresent() && !existingBookings.get().isEmpty()) {
+            throw new ConflictException("Room is not available for the given dates");
+        }
+    }
+
+    private Room getRoom(Long roomId) {
+        return roomRepository.findById(roomId).orElseThrow(
+                () -> new NotFoundException("Room was not found")
+        );
+    }
+
+    private void validateRoomCapacity(Room room, int quantityOfPeople) {
+        if (room.getCapacity() < quantityOfPeople) {
+            throw new BadRequestException("Room doesn't support the requested amount of people");
+        }
+    }
+
+    private BigDecimal calculateFinalPrice(BookingRequest request, Room room) {
+        long nights = ChronoUnit.DAYS.between(request.getCheckInDate(), request.getCheckOutDate());
+        return room.getPricePerNight().multiply(BigDecimal.valueOf(nights));
+    }
+
+    private Booking saveBooking(BookingRequest request, Room room, BigDecimal finalPrice) {
+        return bookingRepository.save(Booking.builder()
+                .type(BookingType.GUEST)
+                .user(UserContext.getInstance().getUser())
+                .checkInDate(request.getCheckInDate())
+                .checkOutDate(request.getCheckOutDate())
+                .room(room)
+                .paymentStatus(PaymentStatus.PAID)
+                .quantityOfPeople(request.getQuantityOfPeople())
+                .finalPrice(finalPrice)
+                .status(BookingStatus.CONFIRMED)
+                .build());
+    }
+
+    private List<Guest> saveGuests(BookingRequest request, Booking savedBooking) {
+        List<Guest> guests = request.getGuests().stream()
+                .map(guest -> Guest.builder()
+                        .firstName(guest.getFirstName())
+                        .lastName(guest.getLastName())
+                        .birthDate(guest.getBirthDate())
+                        .mainGuest(guest.getMainGuest())
+                        .booking(savedBooking)
+                        .build())
+                .toList();
+
+        guestRepository.saveAll(guests);
+        return guests;
     }
 }

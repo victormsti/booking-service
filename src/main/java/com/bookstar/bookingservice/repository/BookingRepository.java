@@ -19,6 +19,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "AND b.checkOutDate > :checkInDate)")
     Optional<List<Booking>> findActiveBookingsForDates(Long roomId, LocalDate checkInDate, LocalDate checkOutDate);
 
+    @Query("SELECT b FROM Booking b WHERE b.room.id = :roomId " +
+            "AND b.status = 'CONFIRMED' " +
+            "AND (b.checkInDate < :checkOutDate " +
+            "AND b.checkOutDate > :checkInDate) " +
+            "AND b.id != :updatedBookingId")
+    Optional<List<Booking>> findActiveBookingsForDatesExcludingCurrent(Long roomId, LocalDate checkInDate, LocalDate checkOutDate, Long updatedBookingId);
+
+
     Optional<Booking> findByIdAndUserId(Long id, Long userId);
 
     Optional<Booking> findByIdAndUserIdAndStatus(Long id, Long userId, BookingStatus bookingStatus);

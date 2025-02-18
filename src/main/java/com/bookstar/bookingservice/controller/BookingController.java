@@ -1,6 +1,6 @@
 package com.bookstar.bookingservice.controller;
 
-import com.bookstar.bookingservice.dto.request.booking.CreateBookingRequest;
+import com.bookstar.bookingservice.dto.request.booking.BookingRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 import com.bookstar.bookingservice.service.contract.BookingService;
 import jakarta.validation.Valid;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,8 +28,13 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<BookingResponse> createBooking(@RequestBody @Valid CreateBookingRequest request){
+    public ResponseEntity<BookingResponse> createBooking(@RequestBody @Valid BookingRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.createBooking(request));
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<BookingResponse> updateBooking(@PathVariable Long id, @RequestBody @Valid BookingRequest request){
+        return ResponseEntity.ok(bookingService.updateBooking(id, request));
     }
 
     @DeleteMapping("{id}")
