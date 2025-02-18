@@ -4,6 +4,7 @@ import com.bookstar.bookingservice.configuration.context.UserContext;
 import com.bookstar.bookingservice.configuration.exception.BadRequestException;
 import com.bookstar.bookingservice.configuration.exception.ConflictException;
 import com.bookstar.bookingservice.configuration.exception.NotFoundException;
+import com.bookstar.bookingservice.configuration.exception.UnauthorizedException;
 import com.bookstar.bookingservice.dto.request.booking.BookingRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 import com.bookstar.bookingservice.enums.BookingStatus;
@@ -83,6 +84,20 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus(BookingStatus.CONFIRMED);
         booking.setPaymentStatus(PaymentStatus.PAID);
         return bookingMapper.toResponse(bookingRepository.save(booking));
+    }
+
+    @Override
+    public void deleteBooking(Long id) {
+        Booking booking = getBooking(id);
+        if (!booking.getRoom().getProperty().getUser().getId().equals(UserContext.getInstance().getUser().getId())) {
+            throw new UnauthorizedException("You do not have permission to delete this booking");
+        }
+
+        if(booking.getStatus().equals(BookingStatus.CONFIRMED)){
+            throw new BadRequestException("Cannot delete an active Booking");
+        }
+
+        bookingRepository.delete(booking);
     }
 
     @Override

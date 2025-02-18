@@ -10,6 +10,8 @@ CREATE TABLE properties (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     type VARCHAR(20) NOT NULL CHECK (type IN ('HOTEL', 'HOSTEL', 'APARTMENT', 'SHARED_APARTMENT'))
+    user_id BIGINT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE rooms (
