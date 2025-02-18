@@ -1,21 +1,23 @@
 package com.bookstar.bookingservice.service.impl;
 
-import com.bookstar.bookingservice.configuration.security.JWTUtil;
+import com.bookstar.bookingservice.configuration.security.JwtUtil;
 import com.bookstar.bookingservice.dto.response.token.TokenResponse;
 import com.bookstar.bookingservice.service.contract.AuthService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     public AuthServiceImpl(AuthenticationManager authenticationManager,
                            UserDetailsService userDetailsService,
-                           JWTUtil jwtUtil) {
+                           JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;

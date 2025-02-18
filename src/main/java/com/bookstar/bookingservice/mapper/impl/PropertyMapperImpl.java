@@ -3,10 +3,12 @@ package com.bookstar.bookingservice.mapper.impl;
 import com.bookstar.bookingservice.dto.response.booking.PropertyResponse;
 import com.bookstar.bookingservice.mapper.contract.PropertyMapper;
 import com.bookstar.bookingservice.model.Property;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class PropertyMapperImpl implements PropertyMapper {
     @Override
     public PropertyResponse toResponse(Property property) {

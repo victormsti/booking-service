@@ -4,10 +4,12 @@ import com.bookstar.bookingservice.dto.response.booking.RoomResponse;
 import com.bookstar.bookingservice.mapper.contract.PropertyMapper;
 import com.bookstar.bookingservice.mapper.contract.RoomMapper;
 import com.bookstar.bookingservice.model.Room;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class RoomMapperImpl implements RoomMapper {
 
     private final PropertyMapper propertyMapper;

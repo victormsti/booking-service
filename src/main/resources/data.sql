@@ -2,7 +2,8 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL
+    email VARCHAR(100) UNIQUE NOT NULL,
+    type VARCHAR(50) NOT NULL CHECK (type IN ('CLIENT', 'PROPERTY_ADMIN'))
 );
 
 CREATE TABLE properties (
@@ -32,12 +33,18 @@ CREATE TABLE bookings (
     check_out_date DATE NOT NULL,
     final_price DECIMAL(10,2) NOT NULL,
     payment_status VARCHAR(10) NOT NULL CHECK (payment_status IN ('PENDING', 'PAID', 'REFUNDED')),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,/.
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE
 );
 
-INSERT INTO users (username, password, email)
-VALUES ('admin', 'admin', 'admin@example.com');
+-- TODO create a m:n table for property_admins
+-- password: 123456
+INSERT INTO users (username, password, type, email)
+VALUES ('test_user', '$2a$12$OJybB6PGaqCA7N210TMOY.wMNoQovhtWKNvQ34GP1VWcqaaY7MLA6', 'CLIENT', 'user@example.com');
+
+-- password: admin
+INSERT INTO users (username, password, type, email)
+VALUES ('admin', '$2a$12$tOEj1qSUERoH3KBHyv17oOd79xx.ihPdC2tFj9kh/c.oNThh0l/8S', 'PROPERTY_ADMIN', 'admin@example.com');
 
 INSERT INTO properties (name, type) VALUES
 ('Hotel Paradise', 'HOTEL'),
