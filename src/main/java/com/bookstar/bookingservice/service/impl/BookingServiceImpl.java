@@ -10,6 +10,8 @@ import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 import com.bookstar.bookingservice.enums.BookingStatus;
 import com.bookstar.bookingservice.enums.BookingType;
 import com.bookstar.bookingservice.enums.PaymentStatus;
+import com.bookstar.bookingservice.enums.PropertyType;
+import com.bookstar.bookingservice.enums.RoomType;
 import com.bookstar.bookingservice.mapper.contract.BookingMapper;
 import com.bookstar.bookingservice.model.Booking;
 import com.bookstar.bookingservice.model.Guest;
@@ -18,6 +20,9 @@ import com.bookstar.bookingservice.repository.BookingRepository;
 import com.bookstar.bookingservice.repository.GuestRepository;
 import com.bookstar.bookingservice.repository.RoomRepository;
 import com.bookstar.bookingservice.service.contract.BookingService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -114,11 +119,17 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponse> getAllBookings() {
-        List<Booking> bookings = bookingRepository.findAllByUserId(UserContext.getInstance().getUser().getId())
-                .orElseGet(ArrayList::new);
+    public Page<BookingResponse> getAllBookings(
+            String propertyName, String roomName, PropertyType propertyType,
+            RoomType roomType, BookingStatus availability, int page, int size) {
 
-        return bookingMapper.toResponse(bookings);
+        Pageable pageable = PageRequest.of(page, size);
+        Long userId = UserContext.getInstance().getUser().getId();
+
+        Page<Booking> bookings = bookingRepository.findBookings(
+                userId, propertyName, roomName, propertyType, roomType, availability, pageable);
+
+        return bookings.map(bookingMapper::toResponse);
     }
 
     private void validateBookingDates(BookingRequest request) {

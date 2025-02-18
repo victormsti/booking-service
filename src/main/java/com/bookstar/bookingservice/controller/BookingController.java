@@ -2,8 +2,12 @@ package com.bookstar.bookingservice.controller;
 
 import com.bookstar.bookingservice.dto.request.booking.BookingRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
+import com.bookstar.bookingservice.enums.BookingStatus;
+import com.bookstar.bookingservice.enums.PropertyType;
+import com.bookstar.bookingservice.enums.RoomType;
 import com.bookstar.bookingservice.service.contract.BookingService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -58,10 +63,18 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.getBookingById(id));
     }
 
-    //TODO change it to pageable
-    //TODO add logic to property owner
     @GetMapping
-    public ResponseEntity<List<BookingResponse>> getAllBookings(){
-        return ResponseEntity.ok(bookingService.getAllBookings());
+    public ResponseEntity<Page<BookingResponse>> getAllBookings(
+            @RequestParam(required = false) String propertyName,
+            @RequestParam(required = false) String roomName,
+            @RequestParam(required = false) PropertyType propertyType,
+            @RequestParam(required = false) RoomType roomType,
+            @RequestParam(required = false) BookingStatus availability,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(bookingService.getAllBookings(
+                propertyName, roomName, propertyType, roomType, availability, page, size)
+        );
     }
 }
