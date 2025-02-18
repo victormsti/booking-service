@@ -37,7 +37,7 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.updateBooking(id, request));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("cancellations/{id}")
     public ResponseEntity<BookingResponse> rebookCanceledBooking(@PathVariable Long id){
         return ResponseEntity.ok(bookingService.rebookCanceledBooking(id));
     }

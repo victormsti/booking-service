@@ -89,9 +89,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void deleteBooking(Long id) {
         Booking booking = getBooking(id);
-        if (!booking.getRoom().getProperty().getUser().getId().equals(UserContext.getInstance().getUser().getId())) {
-            throw new UnauthorizedException("You do not have permission to delete this booking");
-        }
+        validateOwnershipForDeletion(booking);
 
         if(booking.getStatus().equals(BookingStatus.CONFIRMED)){
             throw new BadRequestException("Cannot delete an active Booking");
@@ -202,5 +200,11 @@ public class BookingServiceImpl implements BookingService {
     private Booking getBooking(Long id){
         return bookingRepository.findByIdAndUserId(id, UserContext.getInstance().getUser().getId())
                 .orElseThrow(() -> new NotFoundException("Booking not found"));
+    }
+
+    private void validateOwnershipForDeletion(Booking booking){
+        if (!booking.getRoom().getProperty().getUser().getId().equals(UserContext.getInstance().getUser().getId())) {
+            throw new UnauthorizedException("You do not have permission to delete this booking");
+        }
     }
 }

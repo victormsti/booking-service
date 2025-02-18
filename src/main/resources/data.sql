@@ -9,7 +9,7 @@ CREATE TABLE users (
 CREATE TABLE properties (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    type VARCHAR(20) NOT NULL CHECK (type IN ('HOTEL', 'HOSTEL', 'APARTMENT', 'SHARED_APARTMENT'))
+    type VARCHAR(20) NOT NULL CHECK (type IN ('HOTEL', 'HOSTEL', 'APARTMENT', 'SHARED_APARTMENT')),
     user_id BIGINT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
@@ -56,13 +56,13 @@ VALUES ('test_user', '$2a$12$OJybB6PGaqCA7N210TMOY.wMNoQovhtWKNvQ34GP1VWcqaaY7ML
 
 -- password: admin
 INSERT INTO users (username, password, type, email)
-VALUES ('admin', '$2a$12$tOEj1qSUERoH3KBHyv17oOd79xx.ihPdC2tFj9kh/c.oNThh0l/8S', 'PROPERTY_ADMIN', 'admin@example.com');
+VALUES ('property_admin', '$2a$12$tOEj1qSUERoH3KBHyv17oOd79xx.ihPdC2tFj9kh/c.oNThh0l/8S', 'PROPERTY_ADMIN', 'admin@example.com');
 
-INSERT INTO properties (name, type) VALUES
-('Hotel Paradise', 'HOTEL'),
-('Hostel Central', 'HOSTEL'),
-('Cozy Apartment', 'APARTMENT'),
-('Shared Living Space', 'SHARED_APARTMENT');
+INSERT INTO properties (name, type, user_id) VALUES
+('Hotel Paradise', 'HOTEL', 2),
+('Hostel Central', 'HOSTEL', 2),
+('Cozy Apartment', 'APARTMENT', 2),
+('Shared Living Space', 'SHARED_APARTMENT', 2);
 
 INSERT INTO rooms (property_id, name, type, capacity, price_per_night) VALUES
 (1, 'Deluxe Suite', 'DOUBLE', 2, 150.00),
