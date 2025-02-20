@@ -43,6 +43,6 @@ public class AbstractTest {
     protected final RoomResponse expectedRoomResponse = RoomBuilder.buildRoomResponse();
     protected final User expectedUser = UserBuilder.buildGuestUser();
     protected final BookingRequest validBookingRequest = BookingBuilder.buildBookingRequest();
-    protected final BookingRequest validUpdateBookingRequest = BookingBuilder.buildBookingRequest();
+    protected final BookingRequest validUpdateBookingRequest = BookingBuilder.buildUpdateBookingRequest();
     protected final BookingBlockRequest validBookingBlockRequest = BookingBlockBuilder.buildBookingBlockRequest();
 }

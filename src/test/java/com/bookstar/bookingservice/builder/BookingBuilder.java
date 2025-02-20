@@ -38,8 +38,8 @@ public class BookingBuilder {
         return BookingRequest.builder()
                 .roomId(1L)
                 .quantityOfPeople(2)
-                .checkInDate(LocalDate.of(2025, 5, 18))
-                .checkOutDate(LocalDate.of(2025, 5, 22))
+                .checkInDate(LocalDate.of(2025, 6, 18))
+                .checkOutDate(LocalDate.of(2025, 6, 22))
                 .guests(GuestBuilder.buildGuestRequestList())
                 .build();
     }
