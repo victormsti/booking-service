@@ -1,7 +1,10 @@
 package com.bookstar.bookingservice.builder;
 
+import com.bookstar.bookingservice.dto.request.booking.BookingRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
+import com.bookstar.bookingservice.enums.BookingStatus;
 import com.bookstar.bookingservice.enums.BookingType;
+import com.bookstar.bookingservice.enums.PaymentStatus;
 import com.bookstar.bookingservice.model.Booking;
 
 import java.time.LocalDate;
@@ -16,6 +19,18 @@ public class BookingBuilder {
                 .room(RoomBuilder.buildRoomResponse())
                 .user(UserBuilder.buildGuestUserResponse())
                 .guests(GuestBuilder.buildGuestResponseList())
+                .status(BookingStatus.CONFIRMED)
+                .paymentStatus(PaymentStatus.PAID)
+                .build();
+    }
+
+    public static BookingRequest buildBookingRequest(){
+        return BookingRequest.builder()
+                .roomId(1L)
+                .quantityOfPeople(2)
+                .checkInDate(LocalDate.of(2025, 4, 18))
+                .checkOutDate(LocalDate.of(2025, 4, 22))
+                .guests(GuestBuilder.buildGuestRequestList())
                 .build();
     }
 
@@ -28,6 +43,22 @@ public class BookingBuilder {
                 .guests(GuestBuilder.buildGuest())
                 .room(RoomBuilder.buildRoom())
                 .user(UserBuilder.buildGuestUser())
+                .status(BookingStatus.CONFIRMED)
+                .paymentStatus(PaymentStatus.PAID)
+                .build();
+    }
+
+    public static Booking buildCanceledBooking(){
+        return Booking.builder()
+                .id(1L)
+                .type(BookingType.GUEST)
+                .checkInDate(LocalDate.of(2025, 4, 18))
+                .checkOutDate(LocalDate.of(2025, 4, 22))
+                .guests(GuestBuilder.buildGuest())
+                .room(RoomBuilder.buildRoom())
+                .user(UserBuilder.buildGuestUser())
+                .status(BookingStatus.CANCELLED)
+                .paymentStatus(PaymentStatus.REFUNDED)
                 .build();
     }
 }

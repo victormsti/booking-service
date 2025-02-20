@@ -32,7 +32,7 @@ public class AuthServiceTest extends AbstractTest {
     private AuthServiceImpl authService;
 
     @Test
-    public void whenCallMethodLoginThenShouldReturnValidToken(){
+    public void whenCallingMethodLogin_ThenShouldReturnValidToken(){
         when(authenticationManager.authenticate(any(Authentication.class)))
                 .thenReturn(new UsernamePasswordAuthenticationToken(expectedUserDetails, null, expectedUserDetails.getAuthorities()));
         when(userDetailsService.loadUserByUsername(expectedUsername)).thenReturn(expectedUserDetails);

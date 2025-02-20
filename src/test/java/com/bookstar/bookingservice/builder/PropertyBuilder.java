@@ -18,7 +18,7 @@ public class PropertyBuilder {
     public static Property buildProperty(){
         return Property.builder()
                 .id(1L)
-                .user(UserBuilder.buildGuestUser())
+                .user(UserBuilder.buildPropertyOwnerUser())
                 .type(PropertyType.HOTEL)
                 .name("Property Test")
                 .build();

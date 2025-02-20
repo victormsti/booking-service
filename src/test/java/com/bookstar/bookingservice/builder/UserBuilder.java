@@ -23,4 +23,13 @@ public class UserBuilder {
                 .username("testuser")
                 .build();
     }
+
+    public static User buildPropertyOwnerUser(){
+        return User.builder()
+                .id(1L)
+                .type(UserType.PROPERTY_ADMIN)
+                .email("user@test.com")
+                .username("testuser")
+                .build();
+    }
 }

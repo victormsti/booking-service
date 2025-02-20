@@ -13,6 +13,7 @@ public class RoomBuilder {
                 .id(1L)
                 .type(RoomType.DOUBLE)
                 .name("Room Test")
+                .capacity(2)
                 .pricePerNight(BigDecimal.valueOf(150))
                 .property(PropertyBuilder.buildPropertyResponse())
                 .build();
@@ -23,6 +24,7 @@ public class RoomBuilder {
                 .id(1L)
                 .type(RoomType.DOUBLE)
                 .name("Room Test")
+                .capacity(2)
                 .pricePerNight(BigDecimal.valueOf(150))
                 .property(PropertyBuilder.buildProperty())
                 .build();

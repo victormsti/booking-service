@@ -23,6 +23,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -46,8 +47,8 @@ public class Booking {
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Guest> guests;
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    private List<Guest> guests = new ArrayList<>();;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -72,4 +73,8 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentStatus paymentStatus;
+
+    public void setGuests(List<Guest> guests) {
+        this.guests = new ArrayList<>(guests);
+    }
 }

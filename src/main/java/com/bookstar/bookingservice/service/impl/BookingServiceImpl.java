@@ -78,12 +78,12 @@ public class BookingServiceImpl implements BookingService {
         BigDecimal finalPrice = calculateFinalPrice(request, room);
         Booking updatedBooking = updateBooking(getBooking(bookingId), request, room, finalPrice);
         List<Guest> guests = saveGuests(request, updatedBooking);
-        updatedBooking.getGuests().clear();
-        updatedBooking.getGuests().addAll(guests);
+        updatedBooking.setGuests(guests);
         return bookingMapper.toResponse(bookingRepository.save(updatedBooking));
     }
 
     @Override
+    @Transactional
     public BookingResponse rebookCanceledBooking(Long id) {
         Booking booking = getBooking(id);
         checkRoomAvailabilityForUpdateBooking(id, booking.getRoom().getId(), booking.getCheckInDate(), booking.getCheckOutDate());
@@ -93,6 +93,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public void deleteBooking(Long id) {
         Booking booking = getBookingFromPropertyOwner(id);
         validateOwnershipForDeletion(booking);
@@ -105,6 +106,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public void cancelBooking(Long id) {
         Booking booking = getBooking(id);
 
