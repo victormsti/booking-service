@@ -6,6 +6,8 @@ import com.bookstar.bookingservice.dto.request.booking.BookingRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 import com.bookstar.bookingservice.enums.BookingStatus;
 import com.bookstar.bookingservice.enums.PaymentStatus;
+import com.bookstar.bookingservice.enums.PropertyType;
+import com.bookstar.bookingservice.enums.RoomType;
 import com.bookstar.bookingservice.mapper.contract.BookingMapper;
 import com.bookstar.bookingservice.model.Booking;
 import com.bookstar.bookingservice.repository.BookingRepository;
@@ -17,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -152,9 +156,11 @@ class BookingServiceTest extends AbstractTest {
         UserContext.getInstance().setUser(expectedUser);
         Page<Booking> bookingPage = new PageImpl<>(List.of(expectedBooking));
 
-        when(bookingRepository.findBookings(any(), any(), any(), any(), any(), any(), any())).thenReturn(bookingPage);
+        when(bookingRepository.findBookings(anyLong(), anyString(), anyString(), any(PropertyType.class), any(RoomType.class),
+                any(BookingStatus.class), any(Pageable.class))).thenReturn(bookingPage);
 
-        Page<BookingResponse> result = bookingService.getAllBookings(null, null, null, null, null, 0, 10);
+        Page<BookingResponse> result = bookingService.getAllBookings("test", "test",
+                PropertyType.HOTEL, RoomType.DOUBLE, BookingStatus.CONFIRMED, 0, 10);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
