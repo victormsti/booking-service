@@ -224,7 +224,25 @@ Request Example:
 PUT localhost:8080/api/v1/bookings/2/rebook
 ```
 
-### 6. **Create a Block**
+### 6. **Get a Booking by Id**
+**GET /api/v1/bookings/{id}**
+Get a booking by Id.
+
+Request Example:
+```bash
+GET localhost:8080/api/v1/bookings/1
+```
+
+### 7. **Get Bookings given Params**
+**GET /api/v1/bookings/{id}/rebook**
+Get a Pageable list of Booking by Params.
+
+Request Example:
+```bash
+get localhost:8080/api/v1/bookings?propertyType=HOTEL&roomType=DOUBLE
+```
+
+### 8. **Create a Block**
 **POST /api/v1/bookings/blocks**
 Create a block to make a room unavailable for bookings.
 
@@ -237,7 +255,7 @@ Request Example:
 }
 ```
 
-### 7. **Update a Block**
+### 9. **Update a Block**
 **PUT /api/v1/bookings/blocks/{id}**
 Update an existing block's details.
 
@@ -250,7 +268,7 @@ Request Example:
 }
 ```
 
-### 8. **Delete a Booking or Block**
+### 10. **Delete a Booking or Block**
 **DELETE /api/v1/bookings/{id}**
 Delete an existing booking or block by booking ID.
 
