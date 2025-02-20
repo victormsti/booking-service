@@ -2,6 +2,9 @@ package com.bookstar.bookingservice.service;
 
 import com.bookstar.bookingservice.base.AbstractTest;
 import com.bookstar.bookingservice.configuration.context.UserContext;
+import com.bookstar.bookingservice.configuration.exception.BadRequestException;
+import com.bookstar.bookingservice.configuration.exception.ConflictException;
+import com.bookstar.bookingservice.configuration.exception.NotFoundException;
 import com.bookstar.bookingservice.dto.request.booking.BookingRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 import com.bookstar.bookingservice.enums.BookingStatus;
@@ -22,11 +25,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -164,5 +169,89 @@ class BookingServiceTest extends AbstractTest {
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    void whenVerifyingCheckOutAndCheckInDates_thenItShouldThrowBadRequestException() {
+        UserContext.getInstance().setUser(expectedUser);
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
+            bookingService.createBooking(invalidDatesBookingRequest);
+        });
+
+        assertEquals("Check-in date needs to be before check-out date", exception.getMessage());
+
+    }
+
+    @Test
+    void whenVerifyingExistingBookingBeforeCreatingBooking_thenItShouldThrowConflictException() {
+        UserContext.getInstance().setUser(expectedUser);
+
+        when(bookingRepository.findActiveBookingsForDates(anyLong(), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(Optional.of(Collections.singletonList(expectedBooking)));
+
+        ConflictException exception = assertThrows(ConflictException.class, () -> {
+            bookingService.createBooking(validBookingRequest);
+        });
+
+        assertEquals("Room is not available for the given dates", exception.getMessage());
+
+    }
+
+    @Test
+    void whenFindingRoomById_thenItShouldThrowNotFoundException() {
+        UserContext.getInstance().setUser(expectedUser);
+
+        when(bookingRepository.findActiveBookingsForDates(anyLong(), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+            bookingService.createBooking(validBookingRequest);
+        });
+
+        assertEquals("Room was not found", exception.getMessage());
+    }
+
+    @Test
+    void whenFindingBookingById_thenItShouldThrowNotFoundException() {
+        UserContext.getInstance().setUser(expectedUser);
+
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+            bookingService.getBookingById(1L);
+        });
+
+        assertEquals("Booking not found", exception.getMessage());
+    }
+
+    @Test
+    void whenVerifyingRoomCapacity_thenItShouldThrowBadRequestException() {
+        UserContext.getInstance().setUser(expectedUser);
+
+        when(bookingRepository.findActiveBookingsForDates(anyLong(), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(Optional.empty());
+
+        when(roomRepository.findById(anyLong())).thenReturn(Optional.of(expectedRoom));
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
+            bookingService.createBooking(invalidRoomCapacityBookingRequest);
+        });
+
+        assertEquals("Room doesn't support the requested amount of people", exception.getMessage());
+
+    }
+
+    @Test
+    void whenVerifyingExistingBookingBeforeUpdatingBooking_thenItShouldThrowConflictException() {
+        UserContext.getInstance().setUser(expectedUser);
+
+        when(bookingRepository.findActiveBookingsForDatesExcludingCurrent(anyLong(), any(LocalDate.class),
+                any(LocalDate.class), any(Long.class))).thenReturn(Optional.of(Collections.singletonList(expectedBooking)));
+
+        ConflictException exception = assertThrows(ConflictException.class, () -> {
+            bookingService.updateBooking(1L, validBookingRequest);
+        });
+
+        assertEquals("Room is not available for the given dates", exception.getMessage());
+
     }
 }

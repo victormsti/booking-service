@@ -34,6 +34,26 @@ public class BookingBuilder {
                 .build();
     }
 
+    public static BookingRequest buildInvalidDatesBookingRequest(){
+        return BookingRequest.builder()
+                .roomId(1L)
+                .quantityOfPeople(2)
+                .checkInDate(LocalDate.of(2025, 4, 22))
+                .checkOutDate(LocalDate.of(2025, 4, 18))
+                .guests(GuestBuilder.buildGuestRequestList())
+                .build();
+    }
+
+    public static BookingRequest buildInvalidRoomCapacityBookingRequest(){
+        return BookingRequest.builder()
+                .roomId(1L)
+                .quantityOfPeople(30)
+                .checkInDate(LocalDate.of(2025, 4, 18))
+                .checkOutDate(LocalDate.of(2025, 4, 22))
+                .guests(GuestBuilder.buildGuestRequestList())
+                .build();
+    }
+
     public static BookingRequest buildUpdateBookingRequest(){
         return BookingRequest.builder()
                 .roomId(1L)

@@ -14,6 +14,14 @@ public class BookingBlockBuilder {
                 .build();
     }
 
+    public static BookingBlockRequest buildInvalidDatesBookingBlockRequest(){
+        return BookingBlockRequest.builder()
+                .roomId(1L)
+                .checkInDate(LocalDate.of(2025, 8, 22))
+                .checkOutDate(LocalDate.of(2025, 8, 18))
+                .build();
+    }
+
     public static BookingBlockRequest buildValidUpdateBookingBlockRequest(){
         return BookingBlockRequest.builder()
                 .roomId(1L)

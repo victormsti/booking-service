@@ -4,17 +4,19 @@ import com.bookstar.bookingservice.base.AbstractTest;
 import com.bookstar.bookingservice.configuration.security.JwtUtil;
 import com.bookstar.bookingservice.dto.response.token.TokenResponse;
 import com.bookstar.bookingservice.service.impl.AuthServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 public class AuthServiceTest extends AbstractTest {
@@ -41,5 +43,15 @@ public class AuthServiceTest extends AbstractTest {
         TokenResponse result = authService.login(expectedUsername, expectedPassword);
 
         assertEquals(expectedValidToken, result.getToken());
+    }
+
+    @Test
+    public void whenCallingMethodLogin_ThenShouldThrowBadCredentialsException(){
+        when(authenticationManager.authenticate(any(Authentication.class))).thenThrow(BadCredentialsException.class);
+
+        assertThrows(BadCredentialsException.class, () -> {
+            authService.login(expectedUsername, expectedPassword);
+        });
+
     }
 }
