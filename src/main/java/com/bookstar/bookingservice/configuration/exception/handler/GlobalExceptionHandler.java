@@ -5,7 +5,7 @@ import com.bookstar.bookingservice.configuration.exception.ConflictException;
 import com.bookstar.bookingservice.configuration.exception.NotFoundException;
 import com.bookstar.bookingservice.configuration.exception.RestException;
 import com.bookstar.bookingservice.configuration.exception.UnauthorizedException;
-import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -51,16 +52,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorMessageResponse> handleNotFoundException(NotFoundException ex) {
-        return new ResponseEntity<>(
-                new ErrorMessageResponse(
-                        ex.getStatus().value(),
-                        ex.getMessage()
-                ),ex.getStatus()
-        );
-    }
-
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorMessageResponse> handleConflictException(ConflictException ex) {
         return new ResponseEntity<>(
@@ -71,6 +62,28 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorMessageResponse> handleNotFoundException(NotFoundException ex) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponse(
+                        ex.getStatus().value(),
+                        ex.getMessage()
+                ),ex.getStatus()
+        );
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorMessageResponse> handleMissingServletRequestParameterException(
+            MissingServletRequestParameterException ex) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Missing required request parameter: " + ex.getParameterName()
+                ),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorMessageResponse> handleUnauthorizedException(UnauthorizedException ex) {
         return new ResponseEntity<>(
@@ -78,6 +91,16 @@ public class GlobalExceptionHandler {
                         ex.getStatus().value(),
                         ex.getMessage()
                 ),ex.getStatus()
+        );
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorMessageResponse> handleJwtException(JwtException ex) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponse(
+                        HttpStatus.UNAUTHORIZED.value(),
+                        HttpStatus.UNAUTHORIZED.getReasonPhrase()
+                ),HttpStatus.UNAUTHORIZED
         );
     }
 
@@ -98,16 +121,6 @@ public class GlobalExceptionHandler {
                         HttpStatus.UNAUTHORIZED.value(),
                         ex.getMessage()
                 ),HttpStatus.UNAUTHORIZED
-        );
-    }
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorMessageResponse> handleNotFoundException(ExpiredJwtException ex) {
-        return new ResponseEntity<>(
-                new ErrorMessageResponse(
-                        HttpStatus.FORBIDDEN.value(),
-                        "The token has been expired"
-                ),HttpStatus.FORBIDDEN
         );
     }
 
