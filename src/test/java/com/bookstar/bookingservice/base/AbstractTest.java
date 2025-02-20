@@ -32,6 +32,8 @@ public class AbstractTest {
 
     protected final UserDetails expectedUserDetails = UserDetailsBuilder.buildUserDetails();
     protected final AuthRequest validAuthRequest = AuthRequestBuilder.buildValidAuthRequest();
+    protected final AuthRequest invalidAuthRequest = AuthRequestBuilder.buildInvalidAuthRequest();
+
     protected final BookingResponse expectedBookingResponse = BookingBuilder.buildBookingResponse();
     protected final Booking expectedBooking = BookingBuilder.buildBooking();
     protected final Booking expectedCanceledBooking = BookingBuilder.buildCanceledBooking();

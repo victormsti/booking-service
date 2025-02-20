@@ -6,8 +6,15 @@ public class AuthRequestBuilder {
 
     public static AuthRequest buildValidAuthRequest(){
         return AuthRequest.builder()
-                .username("bestuser")
-                .password("bestpassword")
+                .username("test_user")
+                .password("123456")
+                .build();
+    }
+
+    public static AuthRequest buildInvalidAuthRequest(){
+        return AuthRequest.builder()
+                .username("foo")
+                .password("11111")
                 .build();
     }
 }

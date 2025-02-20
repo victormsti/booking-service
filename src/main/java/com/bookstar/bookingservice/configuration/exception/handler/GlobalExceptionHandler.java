@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -87,6 +88,16 @@ public class GlobalExceptionHandler {
                         ex.getStatus().value(),
                         ex.getMessage()
                 ),ex.getStatus()
+        );
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorMessageResponse> handleBadCredentialsException(BadCredentialsException ex) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponse(
+                        HttpStatus.UNAUTHORIZED.value(),
+                        ex.getMessage()
+                ),HttpStatus.UNAUTHORIZED
         );
     }
 
