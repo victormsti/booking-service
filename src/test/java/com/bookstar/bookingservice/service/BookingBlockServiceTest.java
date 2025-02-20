@@ -93,7 +93,6 @@ public class BookingBlockServiceTest extends AbstractTest {
         });
 
         assertEquals("Check-in date needs to be before check-out date", exception.getMessage());
-
     }
 
     @Test
@@ -110,7 +109,6 @@ public class BookingBlockServiceTest extends AbstractTest {
         });
 
         assertEquals("Cannot create a block since the room is busy for the given gates", exception.getMessage());
-
     }
 
     @Test
@@ -157,6 +155,5 @@ public class BookingBlockServiceTest extends AbstractTest {
         });
 
         assertEquals("Cannot create a block since the room is busy for the given gates", exception.getMessage());
-
     }
 }

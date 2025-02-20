@@ -52,6 +52,5 @@ public class AuthServiceTest extends AbstractTest {
         assertThrows(BadCredentialsException.class, () -> {
             authService.login(expectedUsername, expectedPassword);
         });
-
     }
 }

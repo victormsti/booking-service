@@ -180,7 +180,6 @@ class BookingServiceTest extends AbstractTest {
         });
 
         assertEquals("Check-in date needs to be before check-out date", exception.getMessage());
-
     }
 
     @Test
@@ -195,7 +194,6 @@ class BookingServiceTest extends AbstractTest {
         });
 
         assertEquals("Room is not available for the given dates", exception.getMessage());
-
     }
 
     @Test
@@ -237,7 +235,6 @@ class BookingServiceTest extends AbstractTest {
         });
 
         assertEquals("Room doesn't support the requested amount of people", exception.getMessage());
-
     }
 
     @Test
@@ -252,6 +249,5 @@ class BookingServiceTest extends AbstractTest {
         });
 
         assertEquals("Room is not available for the given dates", exception.getMessage());
-
     }
 }
