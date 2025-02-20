@@ -1,11 +1,13 @@
 package com.bookstar.bookingservice.base;
 
 import com.bookstar.bookingservice.builder.AuthRequestBuilder;
+import com.bookstar.bookingservice.builder.BookingBlockBuilder;
 import com.bookstar.bookingservice.builder.BookingBuilder;
 import com.bookstar.bookingservice.builder.RoomBuilder;
 import com.bookstar.bookingservice.builder.UserBuilder;
 import com.bookstar.bookingservice.builder.UserDetailsBuilder;
 import com.bookstar.bookingservice.dto.request.booking.BookingRequest;
+import com.bookstar.bookingservice.dto.request.bookingBlock.BookingBlockRequest;
 import com.bookstar.bookingservice.dto.request.token.AuthRequest;
 import com.bookstar.bookingservice.dto.response.booking.BookingResponse;
 import com.bookstar.bookingservice.dto.response.booking.RoomResponse;
@@ -37,4 +39,5 @@ public class AbstractTest {
     protected final RoomResponse expectedRoomResponse = RoomBuilder.buildRoomResponse();
     protected final User expectedUser = UserBuilder.buildGuestUser();
     protected final BookingRequest validBookingRequest = BookingBuilder.buildBookingRequest();
+    protected final BookingBlockRequest validBookingBlockRequest = BookingBlockBuilder.buildBookingBlockRequest();
 }

@@ -51,13 +51,13 @@ class BookingServiceTest extends AbstractTest {
     private BookingServiceImpl bookingService;
 
     @Test
-    void whenCallingMethodCreateBooking_thenItShouldCreateABookSuccessfully() {
+    void whenCallingMethodCreateBooking_thenItShouldCreateABookingSuccessfully() {
         UserContext.getInstance().setUser(expectedUser);
 
         when(bookingRepository.findActiveBookingsForDates(anyLong(), any(LocalDate.class), any(LocalDate.class)))
                 .thenReturn(Optional.empty());
 
-        when(roomRepository.findById(anyLong())).thenReturn(Optional.of(expectedBooking.getRoom()));
+        when(roomRepository.findById(anyLong())).thenReturn(Optional.of(expectedRoom));
 
         when(bookingRepository.save(any(Booking.class))).thenReturn(expectedBooking);
 
@@ -70,7 +70,7 @@ class BookingServiceTest extends AbstractTest {
     }
 
     @Test
-    void whenCallingMethodUpdateBooking_thenItShouldUpdateABookSuccessfully() {
+    void whenCallingMethodUpdateBooking_thenItShouldUpdateABookingSuccessfully() {
         UserContext.getInstance().setUser(expectedUser);
 
         when(bookingRepository.findActiveBookingsForDatesExcludingCurrent(
@@ -79,7 +79,7 @@ class BookingServiceTest extends AbstractTest {
 
         when(bookingRepository.findById(anyLong())).thenReturn(Optional.of(expectedBooking));
 
-        when(roomRepository.findById(anyLong())).thenReturn(Optional.of(expectedBooking.getRoom()));
+        when(roomRepository.findById(anyLong())).thenReturn(Optional.of(expectedRoom));
 
         when(bookingRepository.save(any(Booking.class))).thenReturn(expectedBooking);
 
