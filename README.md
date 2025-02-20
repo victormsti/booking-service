@@ -4,6 +4,8 @@
 ## Overview
 **Bookstar** is a booking management system designed to facilitate property owners and users to manage room bookings. This system allows property owners to create blocks, update bookings, and cancel reservations. Clients can search for available rooms, make bookings, and view or cancel their reservations.
 
+
+
 ## Features
 
 - **Authentication**: Users can authenticate via JWT tokens (using fixed credentials for testing).
@@ -39,6 +41,20 @@ Response Example:
 }
 ```
 You will need to use the token in the `Authorization` header as `Bearer <your-token>` for accessing other endpoints.
+
+## Architecture
+
+- **Controller Layer:** Handles HTTP requests and responses, delegates logic to the service layer.
+
+- **Service Layer:** Contains business logic and rules, interacts with repositories.
+
+- **Repository Layer:** Manages data persistence and retrieval.
+
+- **Model Layer:** Houses entity classes representing database structures.
+
+- **DTO Layer:** Transfers data between layers.
+
+- **Exception Handling:** Centralized error handling mechanism.
 
 ## API Endpoints
 
@@ -163,7 +179,7 @@ Response Example:
 ```
 
 ### 3. **Update an Existing Booking**
-**PUT /api/v1/bookings/{bookingId}**
+**PUT /api/v1/bookings/{id}**
 Update an existing booking with new details.
 
 Request Example:
@@ -191,21 +207,21 @@ Request Example:
 ```
 
 ### 4. **Cancel a Booking**
-**DELETE /api/v1/bookings/cancellations/{bookingId}**
+**PUT /api/v1/bookings/cancellations/{id}**
 Cancel a booking by booking ID.
 
 Request Example:
 ```bash
-DELETE localhost:8080/api/v1/bookings/cancellations/2
+PUT localhost:8080/api/v1/bookings/cancellations/2
 ```
 
 ### 5. **Rebook a Canceled Booking**
-**PUT /api/v1/bookings/cancellations/{bookingId}**
+**PUT /api/v1/bookings/{id}/rebook**
 Rebook a canceled booking.
 
 Request Example:
 ```bash
-PUT localhost:8080/api/v1/bookings/cancellations/2
+PUT localhost:8080/api/v1/bookings/2/rebook
 ```
 
 ### 6. **Create a Block**
@@ -222,7 +238,7 @@ Request Example:
 ```
 
 ### 7. **Update a Block**
-**PUT /api/v1/bookings/blocks/{blockId}**
+**PUT /api/v1/bookings/blocks/{id}**
 Update an existing block's details.
 
 Request Example:
@@ -235,7 +251,7 @@ Request Example:
 ```
 
 ### 8. **Delete a Booking or Block**
-**DELETE /api/v1/bookings/{bookingId}**
+**DELETE /api/v1/bookings/{id}**
 Delete an existing booking or block by booking ID.
 
 Request Example:
@@ -246,5 +262,46 @@ DELETE localhost:8080/api/v1/bookings/2
 ## Error Handling
 - **400 Bad Request**: Invalid input or request format.
 - **404 Not Found**: Requested resource not found.
+- **409 Conflict**: Another data was found, so we cannot proceed.
 - **500 Internal Server Error**: Unexpected error occurred.
 
+## Local Setup
+
+### Prerequisites
+- Java 17 or higher
+- Gradle
+
+### Building the app
+- Run the following command:
+  - ```gradle clean build```
+
+- If you are using the Gradle wrapper, you can run:
+  - ```./gradlew clean build```
+
+### Running tests
+
+This project has unit and integration tests
+
+To run all tests, use the following command:
+- ```gradle test```
+
+- If you are using the Gradle wrapper, you can run:
+  - ```./gradlew test```
+
+- To run a specific test class, you can use the following command:
+  - ```gradle test --tests YourTestClassName```
+
+- If you are using the Gradle wrapper, you can run:
+  - ```./gradlew test --tests YourTestClassName```
+
+### Running the App via Command Line
+
+Alternatively, we can run the app via command line by the following commands
+
+```gradle bootRun```
+
+**Running with Gradle Wrapper:** If you don’t have Gradle installed, you can use the Gradle wrapper:
+
+```./gradlew bootRun```
+
+If you have any questions, please feel free to reach out to me at: [victormsti@gmail.com](mailto:victormsti@gmail.com)
