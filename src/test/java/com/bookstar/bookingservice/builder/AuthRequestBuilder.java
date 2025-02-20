@@ -11,6 +11,13 @@ public class AuthRequestBuilder {
                 .build();
     }
 
+    public static AuthRequest buildValidPropertyOwnerAuthRequest(){
+        return AuthRequest.builder()
+                .username("property_admin")
+                .password("admin")
+                .build();
+    }
+
     public static AuthRequest buildInvalidAuthRequest(){
         return AuthRequest.builder()
                 .username("foo")

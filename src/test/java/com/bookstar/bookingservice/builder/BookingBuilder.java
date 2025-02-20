@@ -34,6 +34,16 @@ public class BookingBuilder {
                 .build();
     }
 
+    public static BookingRequest buildUpdateBookingRequest(){
+        return BookingRequest.builder()
+                .roomId(1L)
+                .quantityOfPeople(2)
+                .checkInDate(LocalDate.of(2025, 5, 18))
+                .checkOutDate(LocalDate.of(2025, 5, 22))
+                .guests(GuestBuilder.buildGuestRequestList())
+                .build();
+    }
+
     public static Booking buildBooking(){
         return Booking.builder()
                 .id(1L)

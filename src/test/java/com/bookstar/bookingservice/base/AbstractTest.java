@@ -32,6 +32,8 @@ public class AbstractTest {
 
     protected final UserDetails expectedUserDetails = UserDetailsBuilder.buildUserDetails();
     protected final AuthRequest validAuthRequest = AuthRequestBuilder.buildValidAuthRequest();
+
+    protected final AuthRequest validPropertyOwnerAuthRequest = AuthRequestBuilder.buildValidPropertyOwnerAuthRequest();
     protected final AuthRequest invalidAuthRequest = AuthRequestBuilder.buildInvalidAuthRequest();
 
     protected final BookingResponse expectedBookingResponse = BookingBuilder.buildBookingResponse();
@@ -41,5 +43,6 @@ public class AbstractTest {
     protected final RoomResponse expectedRoomResponse = RoomBuilder.buildRoomResponse();
     protected final User expectedUser = UserBuilder.buildGuestUser();
     protected final BookingRequest validBookingRequest = BookingBuilder.buildBookingRequest();
+    protected final BookingRequest validUpdateBookingRequest = BookingBuilder.buildBookingRequest();
     protected final BookingBlockRequest validBookingBlockRequest = BookingBlockBuilder.buildBookingBlockRequest();
 }
