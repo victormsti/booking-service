@@ -76,6 +76,10 @@ INSERT INTO bookings (user_id, room_id, status, type, quantity_of_people, check_
 VALUES (1, 1, 'CANCELLED', 'GUEST', 2, '2025-04-06', '2025-04-07', 150.00, 'REFUNDED');
 
 
+INSERT INTO bookings (user_id, room_id, status, type, quantity_of_people, check_in_date, check_out_date, final_price, payment_status)
+VALUES (2, 1, 'BLOCKED', 'BLOCK', null, '2025-07-01', '2025-07-30', null, null);
+
+
 INSERT INTO guests (booking_id, first_name, last_name, birth_date, main_guest)
 VALUES
     (1, 'John', 'Doe', '1990-05-15', TRUE),

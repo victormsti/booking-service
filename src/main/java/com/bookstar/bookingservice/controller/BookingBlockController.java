@@ -29,7 +29,7 @@ public class BookingBlockController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<BookingResponse> updateBooking(@PathVariable Long id, @RequestBody @Valid BookingBlockRequest request){
+    public ResponseEntity<BookingResponse> updateBookingBlock(@PathVariable Long id, @RequestBody @Valid BookingBlockRequest request){
         return ResponseEntity.ok(bookingBlockService.updateBookingBlock(id, request));
     }
 }
