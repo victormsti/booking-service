@@ -92,7 +92,7 @@ public class BookingBlockServiceTest extends AbstractTest {
             bookingBlockService.createBookingBlock(invalidDatesBookingBlockRequest);
         });
 
-        assertEquals("Check-in date needs to be before check-out date", exception.getMessage());
+        assertEquals("Check-in date must be before check-out date", exception.getMessage());
     }
 
     @Test

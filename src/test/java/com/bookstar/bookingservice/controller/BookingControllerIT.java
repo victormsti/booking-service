@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -56,9 +55,9 @@ public class BookingControllerIT extends AbstractTest {
 
     @Test
     public void whenCallMethodUpdateBookingThenReturnOkStatusWithCorrectResponse() throws Exception {
-        String jsonRequest = objectMapper.writeValueAsString(validUpdateBookingRequest);
+        String jsonRequest = objectMapper.writeValueAsString(validUpdateBookingBlockRequest);
 
-        mockMvc.perform(put("/api/v1/bookings/1")
+        mockMvc.perform(put("/api/v1/bookings/5")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
@@ -69,7 +68,7 @@ public class BookingControllerIT extends AbstractTest {
     @Test
     public void whenCallMethodRebookCanceledBookingThenReturnOkStatusWithCorrectResponse() throws Exception {
 
-        mockMvc.perform(put("/api/v1/bookings/cancellations/2")
+        mockMvc.perform(put("/api/v1/bookings/2/rebook")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -77,18 +76,19 @@ public class BookingControllerIT extends AbstractTest {
     }
 
     @Test
-    public void whenCallMethodCancelBookingThenReturnNoContent() throws Exception {
+    public void whenCallMethodCancelBookingThenReturnOkStatusWithCorrectResponse() throws Exception {
 
-        mockMvc.perform(delete("/api/v1/bookings/cancellations/1")
+        mockMvc.perform(put("/api/v1/bookings/cancellations/4")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").exists());
     }
 
     @Test
     public void whenCallMethodGetBookingByIdThenReturnOkStatusWithCorrectResponse() throws Exception {
 
-        mockMvc.perform(get("/api/v1/bookings/1")
+        mockMvc.perform(get("/api/v1/bookings/4")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

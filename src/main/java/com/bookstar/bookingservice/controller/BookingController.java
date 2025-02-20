@@ -42,7 +42,7 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.updateBooking(id, request));
     }
 
-    @PutMapping("cancellations/{id}")
+    @PutMapping("{id}/rebook")
     public ResponseEntity<BookingResponse> rebookCanceledBooking(@PathVariable Long id){
         return ResponseEntity.ok(bookingService.rebookCanceledBooking(id));
     }
@@ -52,10 +52,9 @@ public class BookingController {
         bookingService.deleteBooking(id);
         return ResponseEntity.noContent().build();
     }
-    @DeleteMapping("cancellations/{id}")
-    public ResponseEntity<Void> cancelBooking(@PathVariable Long id){
-        bookingService.cancelBooking(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("cancellations/{id}")
+    public ResponseEntity<BookingResponse> cancelBooking(@PathVariable Long id){
+        return ResponseEntity.ok(bookingService.cancelBooking(id));
     }
 
     @GetMapping("{id}")

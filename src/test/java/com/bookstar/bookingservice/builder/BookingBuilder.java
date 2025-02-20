@@ -24,6 +24,20 @@ public class BookingBuilder {
                 .build();
     }
 
+    public static BookingResponse buildCancelledBookingResponse(){
+        return BookingResponse.builder()
+                .id(1L)
+                .type(BookingType.GUEST)
+                .checkInDate(LocalDate.of(2025, 4, 18))
+                .checkOutDate(LocalDate.of(2025, 4, 22))
+                .room(RoomBuilder.buildRoomResponse())
+                .user(UserBuilder.buildGuestUserResponse())
+                .guests(GuestBuilder.buildGuestResponseList())
+                .status(BookingStatus.CANCELLED)
+                .paymentStatus(PaymentStatus.REFUNDED)
+                .build();
+    }
+
     public static BookingRequest buildBookingRequest(){
         return BookingRequest.builder()
                 .roomId(1L)
@@ -60,6 +74,16 @@ public class BookingBuilder {
                 .quantityOfPeople(2)
                 .checkInDate(LocalDate.of(2025, 6, 18))
                 .checkOutDate(LocalDate.of(2025, 6, 22))
+                .guests(GuestBuilder.buildGuestRequestList())
+                .build();
+    }
+
+    public static BookingRequest buildUpdateBookingBlockingRequest(){
+        return BookingRequest.builder()
+                .roomId(1L)
+                .quantityOfPeople(2)
+                .checkInDate(LocalDate.of(2025, 12, 18))
+                .checkOutDate(LocalDate.of(2025, 12, 22))
                 .guests(GuestBuilder.buildGuestRequestList())
                 .build();
     }

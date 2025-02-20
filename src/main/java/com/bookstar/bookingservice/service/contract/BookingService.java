@@ -15,7 +15,7 @@ public interface BookingService {
     BookingResponse updateBooking(Long bookingId, BookingRequest request);
     BookingResponse rebookCanceledBooking(Long id);
     void deleteBooking(Long id);
-    void cancelBooking(Long id);
+    BookingResponse cancelBooking(Long id);
     BookingResponse getBookingById(Long id);
     Page<BookingResponse> getAllBookings(
             String propertyName, String roomName, PropertyType propertyType,

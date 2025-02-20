@@ -137,9 +137,16 @@ class BookingServiceTest extends AbstractTest {
 
         when(bookingRepository.findById(anyLong())).thenReturn(Optional.of(expectedBooking));
 
-        doNothing().when(bookingRepository).delete(any(Booking.class));
+        when(bookingRepository.save(any(Booking.class))).thenReturn(expectedCanceledBooking);
 
-        bookingService.cancelBooking(1L);
+        when(bookingMapper.toResponse(any(Booking.class))).thenReturn(expectedCancelledBookingResponse);
+
+        BookingResponse result = bookingService.cancelBooking(1L);
+
+        assertNotNull(result);
+        assertEquals(expectedBooking.getId(), result.getId());
+        assertEquals(BookingStatus.CANCELLED, result.getStatus());
+        assertEquals(PaymentStatus.REFUNDED, result.getPaymentStatus());
     }
 
     @Test

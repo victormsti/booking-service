@@ -106,12 +106,12 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public void cancelBooking(Long id) {
+    public BookingResponse cancelBooking(Long id) {
         Booking booking = getBooking(id);
 
         booking.setStatus(BookingStatus.CANCELLED);
         booking.setPaymentStatus(PaymentStatus.REFUNDED);
-        bookingRepository.save(booking);
+        return bookingMapper.toResponse(bookingRepository.save(booking));
     }
 
     @Override
