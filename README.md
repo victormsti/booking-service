@@ -279,6 +279,7 @@ DELETE localhost:8080/api/v1/bookings/2
 
 ## Error Handling
 - **400 Bad Request**: Invalid input or request format.
+- **403 Forbidden**: User cannot access the resource.
 - **404 Not Found**: Requested resource not found.
 - **409 Conflict**: Another data was found, so we cannot proceed.
 - **500 Internal Server Error**: Unexpected error occurred.
