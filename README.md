@@ -234,12 +234,12 @@ GET localhost:8080/api/v1/bookings/1
 ```
 
 ### 7. **Get Bookings given Params**
-**GET /api/v1/bookings/{id}/rebook**
-Get a Pageable list of Booking by Params.
+**GET /api/v1/bookings**
+Get a Pageable list of Bookings by Params.
 
 Request Example:
 ```bash
-get localhost:8080/api/v1/bookings?propertyType=HOTEL&roomType=DOUBLE
+GET localhost:8080/api/v1/bookings?propertyType=HOTEL&roomType=DOUBLE
 ```
 
 ### 8. **Create a Block**
