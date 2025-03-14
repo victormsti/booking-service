@@ -6,10 +6,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -51,6 +59,41 @@ public class BookingControllerIT extends AbstractTest {
                         .content(jsonRequest))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists());
+    }
+
+    @Test
+    @Transactional
+    public void whenCallingMethodCreateBookingThenThrowsConflictExceptionDueToOptimisticLock() throws Exception {
+        String jsonRequest = objectMapper.writeValueAsString(validBookingNewYearRequest);
+
+        Supplier<ResultActions> requestSupplier = () -> {
+            try {
+                return mockMvc.perform(post("/api/v1/bookings")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        };
+
+        CompletableFuture<ResultActions> future1 = CompletableFuture.supplyAsync(requestSupplier);
+        CompletableFuture<ResultActions> future2 = CompletableFuture.supplyAsync(requestSupplier);
+
+        CompletableFuture.allOf(future1, future2).join();
+
+        int successCount = 0;
+        int conflictCount = 0;
+
+        for (CompletableFuture<ResultActions> future : List.of(future1, future2)) {
+            int status = future.get().andReturn().getResponse().getStatus();
+
+            if (status == HttpStatus.CREATED.value()) successCount++;
+            else if (status == HttpStatus.CONFLICT.value()) conflictCount++;
+        }
+
+        assertThat(successCount).isEqualTo(1);
+        assertThat(conflictCount).isEqualTo(1);
     }
 
     @Test

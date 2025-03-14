@@ -6,6 +6,7 @@ import com.bookstar.bookingservice.configuration.exception.NotFoundException;
 import com.bookstar.bookingservice.configuration.exception.RestException;
 import com.bookstar.bookingservice.configuration.exception.UnauthorizedException;
 import io.jsonwebtoken.JwtException;
+import jakarta.persistence.OptimisticLockException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,8 +15,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -49,6 +53,16 @@ public class GlobalExceptionHandler {
                         ex.getMessage() != null ? ex.getMessage() : "An unexpected error occurred"
                 ),
                 HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<ErrorMessageResponse> handleObjectOptimisticLockingFailureException(ObjectOptimisticLockingFailureException ex) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponse(
+                        HttpStatus.CONFLICT.value(),
+                        "The entity was modified by another request"
+                ), HttpStatus.CONFLICT
         );
     }
 

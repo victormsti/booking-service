@@ -21,6 +21,8 @@ CREATE TABLE rooms (
     type VARCHAR(10) NOT NULL CHECK (type IN ('SINGLE', 'DOUBLE')),
     capacity INT NOT NULL,
     price_per_night DECIMAL(10,2) NOT NULL,
+    version INT DEFAULT 0,
+    last_booking_at TIMESTAMP,
     FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 

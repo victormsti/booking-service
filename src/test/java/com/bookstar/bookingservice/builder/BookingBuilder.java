@@ -48,6 +48,16 @@ public class BookingBuilder {
                 .build();
     }
 
+    public static BookingRequest buildBookingNewYearRequest(){
+        return BookingRequest.builder()
+                .roomId(1L)
+                .quantityOfPeople(2)
+                .checkInDate(LocalDate.of(2025, 12, 23))
+                .checkOutDate(LocalDate.of(2026, 1, 2))
+                .guests(GuestBuilder.buildGuestRequestList())
+                .build();
+    }
+
     public static BookingRequest buildInvalidDatesBookingRequest(){
         return BookingRequest.builder()
                 .roomId(1L)

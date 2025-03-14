@@ -29,6 +29,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +55,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponse createBooking(BookingRequest request) {
-
         validateBookingDates(request);
         checkRoomAvailabilityForNewBooking(request);
         Room room = getRoom(request.getRoomId());
@@ -63,6 +63,8 @@ public class BookingServiceImpl implements BookingService {
         Booking savedBooking = saveBooking(request, room, finalPrice);
         List<Guest> guests = saveGuests(request, savedBooking);
         savedBooking.setGuests(guests);
+        room.setLastBookingAt(LocalDateTime.now());
+        roomRepository.save(room);
 
         return bookingMapper.toResponse(savedBooking);
     }

@@ -42,6 +42,8 @@ public class AbstractTest {
     protected final RoomResponse expectedRoomResponse = RoomBuilder.buildRoomResponse();
     protected final User expectedUser = UserBuilder.buildGuestUser();
     protected final BookingRequest validBookingRequest = BookingBuilder.buildBookingRequest();
+    protected final BookingRequest validBookingNewYearRequest = BookingBuilder.buildBookingNewYearRequest();
+
     protected final BookingRequest invalidDatesBookingRequest = BookingBuilder.buildInvalidDatesBookingRequest();
     protected final BookingRequest invalidRoomCapacityBookingRequest = BookingBuilder.buildInvalidRoomCapacityBookingRequest();
     protected final BookingRequest validUpdateBookingRequest = BookingBuilder.buildUpdateBookingRequest();
