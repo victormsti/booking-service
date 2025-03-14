@@ -39,6 +39,10 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	// https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api
+	implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
+
 }
 
 tasks.withType<Test> {

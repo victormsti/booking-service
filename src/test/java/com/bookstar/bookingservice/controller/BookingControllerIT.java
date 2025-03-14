@@ -1,6 +1,7 @@
 package com.bookstar.bookingservice.controller;
 
 import com.bookstar.bookingservice.base.AbstractTest;
+import com.bookstar.bookingservice.repository.BookingRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -33,6 +33,9 @@ public class BookingControllerIT extends AbstractTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private BookingRepository bookingRepository;
+
     private String jwtToken;
 
     @BeforeEach
@@ -47,6 +50,8 @@ public class BookingControllerIT extends AbstractTest {
                 .andReturn();
 
         jwtToken = objectMapper.readTree(result.getResponse().getContentAsString()).get("token").asText();
+
+        bookingRepository.deleteAll();
     }
 
     @Test
@@ -62,7 +67,6 @@ public class BookingControllerIT extends AbstractTest {
     }
 
     @Test
-    @Transactional
     public void whenCallingMethodCreateBookingThenThrowsConflictExceptionDueToOptimisticLock() throws Exception {
         String jsonRequest = objectMapper.writeValueAsString(validBookingNewYearRequest);
 

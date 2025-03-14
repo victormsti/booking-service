@@ -55,9 +55,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponse createBooking(BookingRequest request) {
+        Room room = getRoom(request.getRoomId());
         validateBookingDates(request);
         checkRoomAvailabilityForNewBooking(request);
-        Room room = getRoom(request.getRoomId());
         validateRoomCapacity(room, request.getQuantityOfPeople());
         BigDecimal finalPrice = calculateFinalPrice(request, room);
         Booking savedBooking = saveBooking(request, room, finalPrice);

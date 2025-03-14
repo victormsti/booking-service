@@ -51,7 +51,7 @@ public class Room {
     @Column(nullable = false)
     private BigDecimal pricePerNight;
 
-    @Version
+//    @Version
     private Integer version;
 
     @Column
